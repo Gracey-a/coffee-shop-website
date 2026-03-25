@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coffee Blog | Bean & Brew</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="container navbar">
+    <div class="logo">☕ Bean & Brew</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">Story</a></li>
+      <li><a href="blog.html" class="active">Blog</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="index.html#contact">Visit</a></li>
+      <li class="cart-icon" onclick="openCart()">
+        🛒 <span class="cart-count" id="cartCount">0</span>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <h1>The Coffee Chronicles</h1>
+      <p>Tips, stories, and everything coffee</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="blog-grid" id="blogGrid">
+        <!-- Blog posts will be loaded by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog Modal for reading full posts -->
+  <div id="blogModal" class="blog-modal">
+    <div class="blog-modal-content">
+      <span class="close-modal" onclick="closeBlogModal()">&times;</span>
+      <div id="blogModalBody"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-logo">
+        <h3>Bean & Brew</h3>
+        <p>artisan coffee & soulful space</p>
+      </div>
+      <div class="social-links">
+        <a href="#">Instagram</a>
+        <a href="#">Pinterest</a>
+        <a href="#">Spotify Playlist</a>
+      </div>
+    </div>
+    <div class="copyright">
+      © 2025 Bean & Brew Coffee Roasters — Crafted with love ☕
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -92,6 +92,11 @@ function addToCart(itemId) {
     existingItem.quantity++;
   } else {
     cart.push({ ...item, quantity: 1 });
+  }
+  
+   updateCartDisplay();
+  // Alert removed - no popup!
+}
   
 function updateCartDisplay() {
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);

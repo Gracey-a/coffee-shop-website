@@ -15,7 +15,7 @@ const blogPosts = [
     title: "The Art of Pour-Over Coffee",
     date: "March 15, 2025",
     excerpt: "Discover the meticulous craft behind the perfect pour-over and why it brings out the best in single-origin beans.",
-    content: "Pour-over coffee is more than just a brewing method—it's a ritual. The slow, controlled pour allows water to extract the delicate flavors from the coffee grounds, resulting in a clean, bright cup that highlights the bean's unique characteristics. At Hivey's Brew, our baristas take 3-4 minutes to craft each pour-over, ensuring every cup tells the story of its origin.",
+    content: "Pour-over coffee is more than just a brewing method—it's a ritual. The slow, controlled pour allows water to extract the delicate flavors from the coffee grounds, resulting in a clean, bright cup that highlights the bean's unique characteristics. At Bean & Brew, our baristas take 3-4 minutes to craft each pour-over, ensuring every cup tells the story of its origin.",
     image: "https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg?auto=compress&cs=tinysrgb&w=600"
   },
   {
@@ -94,10 +94,10 @@ function addToCart(itemId) {
     cart.push({ ...item, quantity: 1 });
   }
   
-   updateCartDisplay();
-  // Alert removed - no popup!
+  updateCartDisplay();
+  // No alert - items add silently
 }
-  
+
 function updateCartDisplay() {
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const cartCountElement = document.getElementById('cartCount');
@@ -122,13 +122,16 @@ function openCart() {
   const modal = document.getElementById('cartModal');
   if (modal) {
     modal.style.display = 'flex';
-    document.getElementById('checkoutForm').style.display = 'none';
-    document.getElementById('orderMessage').innerHTML = '';
+    const checkoutForm = document.getElementById('checkoutForm');
+    const orderMessage = document.getElementById('orderMessage');
+    if (checkoutForm) checkoutForm.style.display = 'none';
+    if (orderMessage) orderMessage.innerHTML = '';
   }
 }
 
 function closeCart() {
-  document.getElementById('cartModal').style.display = 'none';
+  const modal = document.getElementById('cartModal');
+  if (modal) modal.style.display = 'none';
 }
 
 function showCheckoutForm() {
@@ -136,7 +139,8 @@ function showCheckoutForm() {
     alert('Your cart is empty! Add some items first.');
     return;
   }
-  document.getElementById('checkoutForm').style.display = 'block';
+  const checkoutForm = document.getElementById('checkoutForm');
+  if (checkoutForm) checkoutForm.style.display = 'block';
 }
 
 function submitOrder() {
@@ -157,9 +161,11 @@ function submitOrder() {
   
   const orderMessage = `NEW ORDER!\n\nCustomer: ${name}\nEmail: ${email}\n\nORDER:\n${orderDetails}\n\nTotal: $${total.toFixed(2)}\n\nInstructions: ${instructions || 'None'}`;
   
-  // Copy to clipboard and show success
   navigator.clipboard.writeText(orderMessage);
-  document.getElementById('orderMessage').innerHTML = '<div class="success-message">✅ Order placed! Details copied. We\'ll prepare your coffee! ☕</div>';
+  const orderMessageDiv = document.getElementById('orderMessage');
+  if (orderMessageDiv) {
+    orderMessageDiv.innerHTML = '<div class="success-message">✅ Order placed! Details copied. We\'ll prepare your coffee! ☕</div>';
+  }
   cart = [];
   updateCartDisplay();
   setTimeout(() => closeCart(), 2000);
@@ -184,10 +190,6 @@ function initSlider() {
       dotsContainer.appendChild(dot);
     }
   });
-  
-  if (slides.length > 0 && !document.querySelector('.slide.active')) {
-    slides[0].classList.add('active');
-  }
 }
 
 function changeSlide(direction) {
@@ -238,18 +240,23 @@ function displayBlogPosts() {
 function openBlogPost(postId) {
   const post = blogPosts.find(p => p.id === postId);
   if (post) {
-    document.getElementById('blogModalBody').innerHTML = `
-      <h2>${post.title}</h2>
-      <div class="blog-date">📅 ${post.date}</div>
-      <img src="${post.image}" alt="${post.title}" style="width:100%; border-radius:16px; margin:20px 0;">
-      <p style="line-height:1.6;">${post.content}</p>
-    `;
-    document.getElementById('blogModal').style.display = 'flex';
+    const modalBody = document.getElementById('blogModalBody');
+    if (modalBody) {
+      modalBody.innerHTML = `
+        <h2>${post.title}</h2>
+        <div class="blog-date">📅 ${post.date}</div>
+        <img src="${post.image}" alt="${post.title}" style="width:100%; border-radius:16px; margin:20px 0;">
+        <p style="line-height:1.6;">${post.content}</p>
+      `;
+    }
+    const modal = document.getElementById('blogModal');
+    if (modal) modal.style.display = 'flex';
   }
 }
 
 function closeBlogModal() {
-  document.getElementById('blogModal').style.display = 'none';
+  const modal = document.getElementById('blogModal');
+  if (modal) modal.style.display = 'none';
 }
 
 // ===== EVENTS FUNCTIONS =====
@@ -272,12 +279,15 @@ function displayEvents() {
 }
 
 function openEventRegistration(eventName) {
-  document.getElementById('eventName').value = eventName;
-  document.getElementById('eventModal').style.display = 'flex';
+  const eventNameInput = document.getElementById('eventName');
+  if (eventNameInput) eventNameInput.value = eventName;
+  const modal = document.getElementById('eventModal');
+  if (modal) modal.style.display = 'flex';
 }
 
 function closeEventModal() {
-  document.getElementById('eventModal').style.display = 'none';
+  const modal = document.getElementById('eventModal');
+  if (modal) modal.style.display = 'none';
 }
 
 function registerForEvent(event) {
@@ -287,9 +297,13 @@ function registerForEvent(event) {
   const eventName = document.getElementById('eventName').value;
   
   if (name && email) {
-    document.getElementById('eventRegMessage').innerHTML = '<div class="success-message">✅ Registration successful! We\'ll email you details soon.</div>';
+    const messageDiv = document.getElementById('eventRegMessage');
+    if (messageDiv) {
+      messageDiv.innerHTML = '<div class="success-message">✅ Registration successful! We\'ll email you details soon.</div>';
+    }
     setTimeout(() => closeEventModal(), 2000);
-    document.getElementById('eventRegistrationForm').reset();
+    const form = document.getElementById('eventRegistrationForm');
+    if (form) form.reset();
   }
 }
 
@@ -301,10 +315,13 @@ function setupNewsletter() {
       e.preventDefault();
       const email = document.getElementById('newsletterEmail').value;
       if (email) {
-        document.getElementById('newsletterMessage').innerHTML = '<div class="success-message">✅ Thanks for subscribing! Check your inbox soon.</div>';
+        const messageDiv = document.getElementById('newsletterMessage');
+        if (messageDiv) {
+          messageDiv.innerHTML = '<div class="success-message">✅ Thanks for subscribing! Check your inbox soon.</div>';
+        }
         document.getElementById('newsletterEmail').value = '';
         setTimeout(() => {
-          document.getElementById('newsletterMessage').innerHTML = '';
+          if (messageDiv) messageDiv.innerHTML = '';
         }, 3000);
       }
     };
@@ -322,10 +339,13 @@ function setupContactForm() {
       const message = document.getElementById('contactMessage').value;
       
       if (name && email && message) {
-        document.getElementById('contactFormMessage').innerHTML = '<div class="success-message">✅ Message sent! We\'ll get back to you within 24 hours.</div>';
+        const messageDiv = document.getElementById('contactFormMessage');
+        if (messageDiv) {
+          messageDiv.innerHTML = '<div class="success-message">✅ Message sent! We\'ll get back to you within 24 hours.</div>';
+        }
         contactForm.reset();
         setTimeout(() => {
-          document.getElementById('contactFormMessage').innerHTML = '';
+          if (messageDiv) messageDiv.innerHTML = '';
         }, 3000);
       }
     };

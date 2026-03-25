@@ -15,7 +15,7 @@ const blogPosts = [
     title: "The Art of Pour-Over Coffee",
     date: "March 15, 2025",
     excerpt: "Discover the meticulous craft behind the perfect pour-over and why it brings out the best in single-origin beans.",
-    content: "Pour-over coffee is more than just a brewing method—it's a ritual. The slow, controlled pour allows water to extract the delicate flavors from the coffee grounds, resulting in a clean, bright cup that highlights the bean's unique characteristics. At Bean & Brew, our baristas take 3-4 minutes to craft each pour-over, ensuring every cup tells the story of its origin.",
+    content: "Pour-over coffee is more than just a brewing method—it's a ritual. The slow, controlled pour allows water to extract the delicate flavors from the coffee grounds, resulting in a clean, bright cup that highlights the bean's unique characteristics. At Hivey's Brew, our baristas take 3-4 minutes to craft each pour-over, ensuring every cup tells the story of its origin.",
     image: "https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg?auto=compress&cs=tinysrgb&w=600"
   },
   {

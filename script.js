@@ -1,3 +1,36 @@
+// ===== HAMBURGER MENU TOGGLE =====
+function toggleMenu() {
+  const navLinks = document.getElementById('navLinks');
+  const hamburger = document.getElementById('hamburgerBtn');
+  
+  navLinks.classList.toggle('active');
+  hamburger.classList.toggle('open');
+}
+
+// Close menu when a link is clicked (optional but nice)
+function closeMenu() {
+  const navLinks = document.getElementById('navLinks');
+  const hamburger = document.getElementById('hamburgerBtn');
+  
+  navLinks.classList.remove('active');
+  hamburger.classList.remove('open');
+}
+
+// Add click event to all nav links to close menu
+document.addEventListener('DOMContentLoaded', function() {
+  // Your existing initialization code...
+  
+  // Add close menu functionality to all nav links
+  const navLinksList = document.querySelectorAll('.nav-links a');
+  navLinksList.forEach(link => {
+    link.addEventListener('click', function() {
+      if (window.innerWidth <= 768) {
+        closeMenu();
+      }
+    });
+  });
+});
+
 // ===== MENU DATA =====
 const menuItems = [
   { id: 1, name: "Espresso Classics", description: "Single origin espresso, macchiato, cortado", price: 4.5, icon: "☕" },

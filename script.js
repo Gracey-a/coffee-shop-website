@@ -94,9 +94,6 @@ function addToCart(itemId) {
     cart.push({ ...item, quantity: 1 });
   }
   
-  updateCartDisplay();
-  alert(`${item.name} added to cart!`);
-}
 
 function updateCartDisplay() {
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);

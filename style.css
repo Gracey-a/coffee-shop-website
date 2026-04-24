@@ -870,7 +870,8 @@ footer {
   }
   
   .navbar {
-    flex-direction: column;
+    /* flex-direction: column; */
+    flex-wrap: nowrap;
     text-align: center;
   }
   
@@ -889,6 +890,10 @@ footer {
   .btn-primary, .btn-secondary {
     padding: 8px 20px;
     font-size: 0.85rem;
+  }
+
+  .hamburger {
+  margin-left: auto; 
   }
 }
 

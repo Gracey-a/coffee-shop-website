@@ -7,7 +7,6 @@ function toggleMenu() {
   hamburger.classList.toggle('open');
 }
 
-// Close menu when a link is clicked (optional but nice)
 function closeMenu() {
   const navLinks = document.getElementById('navLinks');
   const hamburger = document.getElementById('hamburgerBtn');
@@ -16,32 +15,17 @@ function closeMenu() {
   hamburger.classList.remove('open');
 }
 
-// Add click event to all nav links to close menu
-document.addEventListener('DOMContentLoaded', function() {
-  // Your existing initialization code...
-  
-  // Add close menu functionality to all nav links
-  const navLinksList = document.querySelectorAll('.nav-links a');
-  navLinksList.forEach(link => {
-    link.addEventListener('click', function() {
-      if (window.innerWidth <= 768) {
-        closeMenu();
-      }
-    });
-  });
-});
-
-// ===== MENU DATA =====
+// ===== MENU DATA (UPDATED) =====
 const menuItems = [
-  { id: 1, name: "Espresso Classics", description: "Single origin espresso, macchiato, cortado", price: 4.5, icon: "☕" },
-  { id: 2, name: "Oat Milk Latte", description: "Velvet oat latte with honey lavender", price: 5.8, icon: "🥛" },
-  { id: 3, name: "Caramel Brûlée", description: "Smooth caramel with vanilla notes", price: 6.2, icon: "🍯" },
-  { id: 4, name: "Butter Croissant", description: "Flaky, buttery French pastry", price: 3.5, icon: "🥐" },
-  { id: 5, name: "Matcha Latte", description: "Ceremonial grade matcha", price: 5.5, icon: "🍵" },
-  { id: 6, name: "Vegan Banana Bread", description: "Plant-based, moist & delicious", price: 4.2, icon: "🍌" }
+  { id: 1, name: "Espresso Classics", desc: "Single origin espresso, macchiato, cortado", price: 4.5, icon: "☕" },
+  { id: 2, name: "Velvet Oat Latte", desc: "Smooth oat milk with honey & lavender", price: 5.8, icon: "🥛" },
+  { id: 3, name: "Caramel Brûlée", desc: "Rich caramel with vanilla bean notes", price: 6.2, icon: "🍯" },
+  { id: 4, name: "Butter Croissant", desc: "Flaky, golden, melt-in-your-mouth", price: 3.5, icon: "🥐" },
+  { id: 5, name: "Matcha Latte", desc: "Ceremonial grade matcha, steamed milk", price: 5.5, icon: "🍵" },
+  { id: 6, name: "Vegan Banana Bread", desc: "Plant-based, moist & spiced", price: 4.2, icon: "🍌" }
 ];
 
-// ===== BLOG DATA =====
+// ===== BLOG DATA (UNCHANGED) =====
 const blogPosts = [
   {
     id: 1,
@@ -69,7 +53,7 @@ const blogPosts = [
   }
 ];
 
-// ===== EVENTS DATA =====
+// ===== EVENTS DATA (UNCHANGED) =====
 const events = [
   {
     id: 1,
@@ -100,65 +84,57 @@ const events = [
 let cart = [];
 let currentSlide = 0;
 
-// ===== MENU DISPLAY =====
+// ===== RENDER MENU (UPDATED) =====
 function displayMenu() {
-  const menuGrid = document.getElementById('menuGrid');
-  if (menuGrid) {
-    menuGrid.innerHTML = menuItems.map(item => `
-      <div class="menu-card">
-        <div class="menu-icon">${item.icon}</div>
-        <h3>${item.name}</h3>
-        <p>${item.description}</p>
-        <div class="price">$${item.price}</div>
-        <button class="add-to-cart" onclick="addToCart(${item.id})">Add to Cart</button>
-      </div>
-    `).join('');
-  }
+  const grid = document.getElementById('menuGrid');
+  if (!grid) return;
+  grid.innerHTML = menuItems.map(item => `
+    <div class="menu-card">
+      <span class="menu-icon">${item.icon}</span>
+      <h3>${item.name}</h3>
+      <p>${item.desc}</p>
+      <div class="price">$${item.price.toFixed(2)}</div>
+      <button class="add-to-cart" onclick="addToCart(${item.id})">Add to Cart</button>
+    </div>
+  `).join('');
 }
 
-// ===== CART FUNCTIONS =====
+// ===== CART FUNCTIONS (UPDATED WITH TOAST) =====
 function addToCart(itemId) {
   const item = menuItems.find(i => i.id === itemId);
-  const existingItem = cart.find(i => i.id === itemId);
-  
-  if (existingItem) {
-    existingItem.quantity++;
-  } else {
-    cart.push({ ...item, quantity: 1 });
-  }
-  
-  updateCartDisplay();
-  // No alert - items add silently
+  const existing = cart.find(i => i.id === itemId);
+  if (existing) existing.quantity++;
+  else cart.push({ ...item, quantity: 1 });
+  updateCartUI();
+  showToast(`${item.name} added ✨`);
 }
 
-function updateCartDisplay() {
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const cartCountElement = document.getElementById('cartCount');
-  if (cartCountElement) cartCountElement.textContent = cartCount;
-  
-  const cartItemsDiv = document.getElementById('cartItems');
-  if (cartItemsDiv) {
-    cartItemsDiv.innerHTML = cart.map(item => `
-      <div class="cart-item">
+function updateCartUI() {
+  const count = cart.reduce((s, i) => s + i.quantity, 0);
+  document.getElementById('cartCount').textContent = count;
+  const container = document.getElementById('cartItems');
+  if (!container) return;
+  if (cart.length === 0) {
+    container.innerHTML = '<p style="color:#6A5340; text-align:center; padding:20px 0;">Your cart is empty ☕</p>';
+  } else {
+    container.innerHTML = cart.map(item => `
+      <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f0ebe6;">
         <span>${item.name} x${item.quantity}</span>
         <span>$${(item.price * item.quantity).toFixed(2)}</span>
       </div>
     `).join('');
-    
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    document.getElementById('cartTotal').textContent = `Total: $${total.toFixed(2)}`;
   }
+  const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+  document.getElementById('cartTotal').textContent = `Total: $${total.toFixed(2)}`;
 }
 
 function openCart() {
-  updateCartDisplay();
+  updateCartUI();
   const modal = document.getElementById('cartModal');
   if (modal) {
     modal.style.display = 'flex';
-    const checkoutForm = document.getElementById('checkoutForm');
-    const orderMessage = document.getElementById('orderMessage');
-    if (checkoutForm) checkoutForm.style.display = 'none';
-    if (orderMessage) orderMessage.innerHTML = '';
+    document.getElementById('checkoutForm').style.display = 'none';
+    document.getElementById('orderMessage').innerHTML = '';
   }
 }
 
@@ -168,73 +144,54 @@ function closeCart() {
 }
 
 function showCheckoutForm() {
-  if (cart.length === 0) {
-    alert('Your cart is empty! Add some items first.');
-    return;
-  }
-  const checkoutForm = document.getElementById('checkoutForm');
-  if (checkoutForm) checkoutForm.style.display = 'block';
+  if (cart.length === 0) { alert('Your cart is empty!'); return; }
+  document.getElementById('checkoutForm').style.display = 'block';
 }
 
 function submitOrder() {
-  const name = document.getElementById('customerName').value;
-  const email = document.getElementById('customerEmail').value;
-  const instructions = document.getElementById('specialInstructions').value;
-  
-  if (!name || !email) {
-    alert('Please enter your name and email');
-    return;
-  }
-  
-  const orderDetails = cart.map(item => 
-    `${item.name} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`
-  ).join('\n');
-  
-  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  
-  const orderMessage = `NEW ORDER!\n\nCustomer: ${name}\nEmail: ${email}\n\nORDER:\n${orderDetails}\n\nTotal: $${total.toFixed(2)}\n\nInstructions: ${instructions || 'None'}`;
-  
-  navigator.clipboard.writeText(orderMessage);
-  const orderMessageDiv = document.getElementById('orderMessage');
-  if (orderMessageDiv) {
-    orderMessageDiv.innerHTML = '<div class="success-message">✅ Order placed! Details copied. We\'ll prepare your coffee! ☕</div>';
-  }
+  const name = document.getElementById('customerName').value.trim();
+  const email = document.getElementById('customerEmail').value.trim();
+  if (!name || !email) { alert('Please enter your name and email'); return; }
+  const details = cart.map(i => `${i.name} x${i.quantity} – $${(i.price * i.quantity).toFixed(2)}`).join('\n');
+  const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+  const msg = `NEW ORDER!\n\nCustomer: ${name}\nEmail: ${email}\n\n${details}\n\nTotal: $${total.toFixed(2)}`;
+  navigator.clipboard.writeText(msg);
+  document.getElementById('orderMessage').innerHTML = '<div style="background:#4CAF50; color:white; padding:12px; border-radius:12px; text-align:center;">✅ Order placed! Details copied ☕</div>';
   cart = [];
-  updateCartDisplay();
-  setTimeout(() => closeCart(), 2000);
+  updateCartUI();
+  setTimeout(closeCart, 2000);
 }
 
-// ===== PHOTO SLIDER =====
+// ===== TOAST =====
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+// ===== SLIDER (UPDATED) =====
 function initSlider() {
   const slides = document.querySelectorAll('.slide');
-  const dotsContainer = document.getElementById('sliderDots');
-  
-  if (slides.length === 0) return;
-  
-  slides.forEach((slide, index) => {
-    if (index === 0) slide.classList.add('active');
-    else slide.classList.remove('active');
-    
-    if (dotsContainer) {
-      const dot = document.createElement('span');
-      dot.classList.add('dot');
-      if (index === 0) dot.classList.add('active');
-      dot.onclick = () => goToSlide(index);
-      dotsContainer.appendChild(dot);
-    }
+  const dots = document.getElementById('sliderDots');
+  if (!dots) return;
+  dots.innerHTML = '';
+  slides.forEach((_, i) => {
+    const dot = document.createElement('span');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goToSlide(i);
+    dots.appendChild(dot);
   });
 }
 
-function changeSlide(direction) {
+function changeSlide(dir) {
   const slides = document.querySelectorAll('.slide');
   const dots = document.querySelectorAll('.dot');
-  if (slides.length === 0) return;
-  
+  if (!slides.length) return;
   slides[currentSlide].classList.remove('active');
   if (dots[currentSlide]) dots[currentSlide].classList.remove('active');
-  
-  currentSlide = (currentSlide + direction + slides.length) % slides.length;
-  
+  currentSlide = (currentSlide + dir + slides.length) % slides.length;
   slides[currentSlide].classList.add('active');
   if (dots[currentSlide]) dots[currentSlide].classList.add('active');
 }
@@ -242,18 +199,15 @@ function changeSlide(direction) {
 function goToSlide(index) {
   const slides = document.querySelectorAll('.slide');
   const dots = document.querySelectorAll('.dot');
-  if (slides.length === 0) return;
-  
+  if (!slides.length) return;
   slides[currentSlide].classList.remove('active');
   if (dots[currentSlide]) dots[currentSlide].classList.remove('active');
-  
   currentSlide = index;
-  
   slides[currentSlide].classList.add('active');
   if (dots[currentSlide]) dots[currentSlide].classList.add('active');
 }
 
-// ===== BLOG FUNCTIONS =====
+// ===== BLOG FUNCTIONS (UNCHANGED) =====
 function displayBlogPosts() {
   const blogGrid = document.getElementById('blogGrid');
   if (blogGrid) {
@@ -292,7 +246,7 @@ function closeBlogModal() {
   if (modal) modal.style.display = 'none';
 }
 
-// ===== EVENTS FUNCTIONS =====
+// ===== EVENTS FUNCTIONS (UNCHANGED) =====
 function displayEvents() {
   const eventsGrid = document.getElementById('eventsGrid');
   if (eventsGrid) {
@@ -340,7 +294,7 @@ function registerForEvent(event) {
   }
 }
 
-// ===== NEWSLETTER =====
+// ===== NEWSLETTER & CONTACT =====
 function setupNewsletter() {
   const newsletterForm = document.getElementById('newsletterForm');
   if (newsletterForm) {
@@ -350,42 +304,40 @@ function setupNewsletter() {
       if (email) {
         const messageDiv = document.getElementById('newsletterMessage');
         if (messageDiv) {
-          messageDiv.innerHTML = '<div class="success-message">✅ Thanks for subscribing! Check your inbox soon.</div>';
+          messageDiv.innerHTML = '<div style="color:#D4A373;">✅ Thanks! Check your inbox for a surprise ☕</div>';
         }
         document.getElementById('newsletterEmail').value = '';
         setTimeout(() => {
           if (messageDiv) messageDiv.innerHTML = '';
-        }, 3000);
+        }, 4000);
       }
     };
   }
 }
 
-// ===== CONTACT FORM =====
 function setupContactForm() {
   const contactForm = document.getElementById('contactForm');
   if (contactForm) {
     contactForm.onsubmit = function(e) {
       e.preventDefault();
-      const name = document.getElementById('contactName').value;
-      const email = document.getElementById('contactEmail').value;
-      const message = document.getElementById('contactMessage').value;
+      const name = document.getElementById('contactName').value.trim();
+      const email = document.getElementById('contactEmail').value.trim();
+      const message = document.getElementById('contactMessage').value.trim();
       
       if (name && email && message) {
         const messageDiv = document.getElementById('contactFormMessage');
         if (messageDiv) {
-          messageDiv.innerHTML = '<div class="success-message">✅ Message sent! We\'ll get back to you within 24 hours.</div>';
+          messageDiv.innerHTML = '<div style="background:#4CAF50; color:white; padding:12px; border-radius:16px; text-align:center;">✅ Message sent! We\'ll reply within 24h.</div>';
         }
         contactForm.reset();
         setTimeout(() => {
           if (messageDiv) messageDiv.innerHTML = '';
-        }, 3000);
+        }, 5000);
       }
     };
   }
 }
 
-// ===== EVENT REGISTRATION =====
 function setupEventRegistration() {
   const eventForm = document.getElementById('eventRegistrationForm');
   if (eventForm) {
@@ -393,22 +345,37 @@ function setupEventRegistration() {
   }
 }
 
-// ===== INITIALIZE EVERYTHING =====
+// ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', function() {
+  // Hamburger close on link click
+  const navLinksList = document.querySelectorAll('.nav-links a');
+  navLinksList.forEach(link => {
+    link.addEventListener('click', function() {
+      if (window.innerWidth <= 768) {
+        closeMenu();
+      }
+    });
+  });
+
+  // Display menu (homepage)
   displayMenu();
-  updateCartDisplay();
+  updateCartUI();
   initSlider();
+
+  // Blog & events (if those pages exist)
   displayBlogPosts();
   displayEvents();
+
+  // Forms
   setupNewsletter();
   setupContactForm();
   setupEventRegistration();
-  
-  // Auto-advance slider every 5 seconds
+
+  // Auto-slide for gallery
   if (document.querySelectorAll('.slide').length > 0) {
     setInterval(() => changeSlide(1), 5000);
   }
-  
+
   // Close modals on outside click
   window.onclick = function(event) {
     const cartModal = document.getElementById('cartModal');
